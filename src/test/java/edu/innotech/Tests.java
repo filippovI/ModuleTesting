@@ -17,7 +17,7 @@ public class Tests {
         Student student = new Student("student");
         student.addGrade(2);
         student.addGrade(3);
-        Assertions.assertEquals(expectedGrades, student.getGrades());
+        Assertions.assertEquals(expectedGrades, student.getGrades(), "Полученные оценки != исходным");
     }
 
     @Test
@@ -25,8 +25,8 @@ public class Tests {
         Student student = new Student("student");
         student.addGrade(2);
         student.getGrades().add(5);
-        Assertions.assertEquals(1, student.getGrades().size());
-        Assertions.assertEquals(2, student.getGrades().get(0));
+        Assertions.assertEquals(1, student.getGrades().size(), "Размер листа оценок != 1");
+        Assertions.assertEquals(2, student.getGrades().get(0), "Оценка != 2");
     }
 
     @ParameterizedTest(name = "addSuccessGrade")
@@ -35,27 +35,30 @@ public class Tests {
         List<Integer> expectedGrades = new ArrayList<>(List.of(arg));
         Student student = new Student("student");
         student.addGrade(arg);
-        Assertions.assertEquals(expectedGrades, student.getGrades());
+        Assertions.assertEquals(expectedGrades, student.getGrades(), "Листа оценок не равен исходному");
     }
 
     @ParameterizedTest(name = "addUnsuccessGrade")
     @ValueSource(ints = {1, -1, 6, 100})
     public void testUnsuccessAddGrade(Integer arg) {
         Student student = new Student("student");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> student.addGrade(arg));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> student.addGrade(arg),
+                "Была добавлена некорректная оценка");
     }
 
     @Test
     public void testGetName() {
         Student student = new Student("student");
-        Assertions.assertEquals("student", student.getName());
+        Assertions.assertEquals("student", student.getName(),
+                "Полученное имя не совпадает с исходным");
     }
 
     @Test
     public void testSetName() {
         Student student = new Student("student");
         student.setName("Ivan");
-        Assertions.assertEquals("Ivan", student.getName());
+        Assertions.assertEquals("Ivan", student.getName(),
+                "Полученное имя не совпадает с установленным");
     }
 
     @Test
@@ -66,19 +69,19 @@ public class Tests {
         String student4 = "Oleg";
         Student student5 = new Student("Gleb");
         Student student6 = student5;
-        Assertions.assertEquals(false, student.equals(student4));
+        Assertions.assertEquals(false, student.equals(student4), "Объекты не должны быть равны");
         Assertions.assertEquals(student5, student6);
-        Assertions.assertEquals(false, student.equals(student3));
+        Assertions.assertEquals(false, student.equals(student3), "Объекты не должны быть равны");
         student5.addGrade(2);
         student5.addGrade(5);
-        Assertions.assertNotEquals(student, student5);
+        Assertions.assertNotEquals(student, student5, "Объекты не должны быть равны");
         student.addGrade(2);
         student.addGrade(5);
         student1.addGrade(2);
         student1.addGrade(5);
-        Assertions.assertEquals(student, student1);
+        Assertions.assertEquals(student, student1, "Объекты должны быть равны");
         student1.addGrade(3);
-        Assertions.assertNotEquals(student, student1);
+        Assertions.assertNotEquals(student, student1, "Объекты не должны быть равны");
     }
 
     @ParameterizedTest(name = "getToString")
@@ -86,7 +89,7 @@ public class Tests {
     public void testToSting(String arg) {
         Student student = new Student("student");
         student.addGrade(2);
-        Assertions.assertEquals(arg, student.toString());
+        Assertions.assertEquals(arg, student.toString(), "Полученная строка не совпадает с ожидаемой");
     }
 
     @Test
@@ -99,8 +102,8 @@ public class Tests {
         int hash = 7;
         hash = 13 * hash + Objects.hashCode(name);
         hash = 13 * hash + Objects.hashCode(grades);
-        Assertions.assertEquals(hash, student.hashCode());
+        Assertions.assertEquals(hash, student.hashCode(), "HashCode объектов должен совпадать");
         student.addGrade(3);
-        Assertions.assertNotEquals(hash, student.hashCode());
+        Assertions.assertNotEquals(hash, student.hashCode(), "HashCode объектов не должен совпадать");
     }
 }

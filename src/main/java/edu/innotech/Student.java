@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Student {
     private String name;
-    private List<Integer> grades = new ArrayList<>();
+    private final List<Integer> grades = new ArrayList<>();
 
     public Student(String name) {
         this.name = name;
@@ -21,7 +21,7 @@ public class Student {
     }
 
     public List<Integer> getGrades() {
-        return grades;
+        return new ArrayList<>(grades);
     }
 
     public void addGrade(int grade) {

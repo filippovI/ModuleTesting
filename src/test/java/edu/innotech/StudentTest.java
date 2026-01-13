@@ -39,7 +39,7 @@ public class StudentTest {
 
     @ParameterizedTest(name = "Добавляем валидные оценки {0}")
     @ValueSource(ints = {2, 3, 4, 5})
-    void addGrade_validGrade_shouldAddToGradesList(Integer validGrade) throws IOException {
+    void addGradeAndValidGradeAndShouldAddToGradesList(Integer validGrade) throws IOException {
         CloseableHttpResponse configuredResponse = createFullyConfiguredMockHttpResponse("true");
         when(mockHttpClient.execute(any(HttpGet.class)))
                 .thenReturn(configuredResponse);
@@ -53,7 +53,7 @@ public class StudentTest {
 
     @ParameterizedTest(name = "Добавляем невалидные оценки {0}")
     @ValueSource(ints = {1, 6, -1, 99})
-    void addGrade_invalidGrade_shouldThrowExceptionAndNotAddToGradesList(Integer invalidGrade) throws IOException {
+    void addGradeAndInvalidGradeAndShouldThrowExceptionAndNotAddToGradesList(Integer invalidGrade) throws IOException {
         CloseableHttpResponse configuredResponse = createFullyConfiguredMockHttpResponse("false");
         when(mockHttpClient.execute(any(HttpGet.class))).thenReturn(configuredResponse);
         Exception exception = assertThrows(IllegalArgumentException.class, () ->

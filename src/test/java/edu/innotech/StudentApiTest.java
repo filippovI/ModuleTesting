@@ -57,6 +57,11 @@ public class StudentApiTest {
                 .extract()
                 .body()
                 .asString();
+        getStudent(Integer.parseInt(id))
+                .then()
+                .statusCode(200)
+                .body("name", Matchers.equalTo("Igor"))
+                .body("id", Matchers.equalTo(Integer.parseInt(id)));
         deleteStudent(Integer.parseInt(id));
     }
 
@@ -162,7 +167,8 @@ public class StudentApiTest {
         deleteFlag = false;
         getStudent(ID)
                 .then()
-                .statusCode(404);
+                .statusCode(404)
+                .body(is(emptyString()));
     }
 
     @Test
@@ -224,6 +230,7 @@ public class StudentApiTest {
                 .extract()
                 .as(new TypeRef<List<Student>>() {
                 });
+        System.out.println(students);
 
         Assertions.assertEquals(1, students.size());
         Assertions.assertEquals(students.get(0).getMarks(), List.of(5, 5));

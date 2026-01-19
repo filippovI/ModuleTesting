@@ -48,6 +48,7 @@ public class Employees {
                     "SET NAME = ? " +
                     "WHERE ID = ?", e.getName(), e.getID());
         }
+        System.out.println(employees.size());
     }
 
 }

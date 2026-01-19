@@ -14,6 +14,7 @@ public class Employees {
     public static void main(String[] args) throws SQLException {
         moveAnnToHR();
         updateNameIfLowRegister();
+        employeesItCount();
     }
 
     public static void moveAnnToHR() {
@@ -35,20 +36,37 @@ public class Employees {
     public static void updateNameIfLowRegister() {
         DbClient db = new DbClient(DB_URL);
         List<Employee> employees = db.select("SELECT * FROM Employee",
-                r -> new Employee(
-                        r.getInt("ID"),
-                        r.getString("Name"),
-                        r.getInt("DepartmentID")))
+                        r -> new Employee(
+                                r.getInt("ID"),
+                                r.getString("Name"),
+                                r.getInt("DepartmentID")))
                 .stream()
                 .filter(e -> Character.isLowerCase(e.getName().charAt(0)))
                 .peek(e -> e.setName(e.getName().substring(0, 1).toUpperCase() + e.getName().substring(1)))
                 .collect(Collectors.toList());
-        for (Employee e : employees) {
-            db.update("UPDATE Employee " +
-                    "SET NAME = ? " +
-                    "WHERE ID = ?", e.getName(), e.getID());
+        if (!employees.isEmpty()) {
+            for (Employee e : employees) {
+                db.update("UPDATE Employee " +
+                        "SET NAME = ? " +
+                        "WHERE ID = ?", e.getName(), e.getID());
+            }
         }
         System.out.println(employees.size());
     }
 
+
+    public static void employeesItCount() {
+        DbClient db = new DbClient(DB_URL);
+        List<Employee> employees = db.select("SELECT * " +
+                        "FROM Employee e " +
+                        "JOIN Department d " +
+                        "WHERE e.DepartmentID = d.ID " +
+                        "AND d.Name = 'IT' ",
+                r -> new Employee(
+                        r.getInt("ID"),
+                        r.getString("Name"),
+                        r.getInt("DepartmentID")));
+
+        System.out.println(employees.size());
+    }
 }

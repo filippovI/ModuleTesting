@@ -42,8 +42,9 @@ public class Employees {
         List<Employee> employees = db.select("SELECT * FROM Employee", MAP_TO_EMPLOYEE)
                 .stream()
                 .filter(e -> Character.isLowerCase(e.getName().charAt(0)))
-                .peek(e -> e.setName(e.getName().substring(0, 1).toUpperCase() + e.getName().substring(1)))
                 .collect(Collectors.toList());
+        employees.forEach(e -> e.setName(e.getName().substring(0, 1).toUpperCase() + e.getName().substring(1)));
+
         if (!employees.isEmpty()) {
             for (Employee e : employees) {
                 db.update("UPDATE Employee " +

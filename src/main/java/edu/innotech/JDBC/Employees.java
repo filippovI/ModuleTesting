@@ -17,16 +17,15 @@ public class Employees {
     private static final RowMapper<Department> MAP_TO_DEPARTMENT = r -> new Department(
             r.getInt("ID"),
             r.getString("Name"));
-    private static final String DB_URL = "./Office";
 
-    public static void main(String[] args) {
-        moveAnnToHR();
-        updateNameIfLowRegister();
-        employeesItCount();
+    private final String dbUrl;
+
+    public Employees(String dbUrl) {
+        this.dbUrl = dbUrl;
     }
 
-    public static void moveAnnToHR() {
-        DbClient db = new DbClient(DB_URL);
+    public void moveAnnToHR() {
+        DbClient db = new DbClient(this.dbUrl);
         List<Employee> annsList = db.select("SELECT * FROM Employee WHERE NAME = 'Ann'", MAP_TO_EMPLOYEE);
         if (annsList.size() == 1) {
             List<Department> hrDepartment = db.select("SELECT * FROM Department WHERE NAME = 'HR'", MAP_TO_DEPARTMENT);
@@ -37,8 +36,8 @@ public class Employees {
         }
     }
 
-    public static void updateNameIfLowRegister() {
-        DbClient db = new DbClient(DB_URL);
+    public void updateNameIfLowRegister() {
+        DbClient db = new DbClient(this.dbUrl);
         List<Employee> employees = db.select("SELECT * FROM Employee", MAP_TO_EMPLOYEE)
                 .stream()
                 .filter(e -> Character.isLowerCase(e.getName().charAt(0)))
@@ -55,9 +54,8 @@ public class Employees {
         System.out.println(employees.size());
     }
 
-
-    public static void employeesItCount() {
-        DbClient db = new DbClient(DB_URL);
+    public void employeesItCount() {
+        DbClient db = new DbClient(this.dbUrl);
         List<Employee> employees = db.select("SELECT * " +
                 "FROM Employee e " +
                 "JOIN Department d " +

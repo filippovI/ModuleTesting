@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 
 public class Employees {
 
-    private static final RowMapper<Employee> MAP_TO_EMPLOYEE = r -> new Employee(
+    public static final RowMapper<Employee> MAP_TO_EMPLOYEE = r -> new Employee(
             r.getInt("ID"),
             r.getString("Name"),
             r.getInt("DepartmentID"));
-    private static final RowMapper<Department> MAP_TO_DEPARTMENT = r -> new Department(
+    public static final RowMapper<Department> MAP_TO_DEPARTMENT = r -> new Department(
             r.getInt("ID"),
             r.getString("Name"));
 

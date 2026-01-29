@@ -28,24 +28,26 @@ public class DbClient {
         return result;
     }
 
-    public int update(String sql, Object... params) {
+    public void update(String sql, Object... params) {
         try (Connection con = DriverManager.getConnection(url);
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             for (int i = 0; i < params.length; i++) {
                 ps.setObject(i + 1, params[i]);
             }
-            return ps.executeUpdate();
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при UPDATE: " + e.getMessage());
         }
     }
 
     public void createDB() {
-        try (Connection con = DriverManager.getConnection(this.url)) {
+        try (Connection con = DriverManager.getConnection(url)) {
             Statement stm = con.createStatement();
             stm.executeUpdate("DROP TABLE Department IF EXISTS");
             stm.executeUpdate("CREATE TABLE Department(ID INT PRIMARY KEY, NAME VARCHAR(255))");
+            stm.executeUpdate("INSERT INTO Department VALUES(1,'Accounting')");
+            stm.executeUpdate("INSERT INTO Department VALUES(2,'IT')");
             stm.executeUpdate("INSERT INTO Department VALUES(3,'HR')");
             stm.executeUpdate("DROP TABLE Employee IF EXISTS");
             stm.executeUpdate("CREATE TABLE Employee(" +
@@ -57,8 +59,7 @@ public class DbClient {
             stm.executeUpdate("INSERT INTO Employee VALUES(2,'Ann',1)");
             stm.executeUpdate("INSERT INTO Employee VALUES(3,'Liz',2)");
             stm.executeUpdate("INSERT INTO Employee VALUES(4,'Tom',2)");
-            stm.executeUpdate("INSERT INTO Employee VALUES(5,'Todd',3)");
-
+            stm.executeUpdate("INSERT INTO Employee VALUES(5,'todd',3)");
         } catch (SQLException e) {
             System.out.println(e);
         }

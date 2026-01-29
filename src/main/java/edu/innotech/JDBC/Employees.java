@@ -17,7 +17,7 @@ public class Employees {
     private static final RowMapper<Department> MAP_TO_DEPARTMENT = r -> new Department(
             r.getInt("ID"),
             r.getString("Name"));
-    private static final String DB_URL = "C:\\Users\\IvYFilippov\\Desktop\\Office\\Office";
+    private static final String DB_URL = "./Office";
 
     public static void main(String[] args) {
         moveAnnToHR();

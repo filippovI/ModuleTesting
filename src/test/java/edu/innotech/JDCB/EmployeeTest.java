@@ -11,37 +11,38 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
-import static edu.innotech.JDBC.Employees.MAP_TO_EMPLOYEE;
+import static edu.innotech.JDCB.EmployeeUtils.*;
+
 
 public class EmployeeTest {
 
     private static final String DB_URL = "mem:test_office;DB_CLOSE_DELAY=-1";
-    private static final Employees employees = new Employees(DB_URL);
-    private static final DbClient dbClient = new DbClient(DB_URL);
-
+    private static final Employees EMPLOYEES = new Employees(DB_URL);
+    static final DbClient DB_CLIENT = new DbClient(DB_URL);
 
     @Test
     @DisplayName("Перемещаем сотрудника Ann в HR отдел")
     public void moveAnnToHRTest() {
-        dbClient.createDB();
+        DB_CLIENT.createDB();
         List<Employee> annsList = getAnnsEmployee();
-        Assertions.assertTrue(annsList.size() == 1 && annsList.get(0).getDepartmentID() != 3);
-        employees.moveAnnToHR();
+        Assertions.assertTrue(annsList.size() == 1 && annsList.get(0).getDepartmentID() != 3,
+                "Сотрудников Ann больше, чем 1 или сотрудник в HR департаменте");
+        EMPLOYEES.moveAnnToHR();
         annsList = getAnnsEmployee();
-        Assertions.assertTrue(annsList.size() == 1 && annsList.get(0).getDepartmentID() == 3);
+        Assertions.assertTrue(annsList.size() == 1 && annsList.get(0).getDepartmentID() == 3,
+                "Сотрудников Ann больше, чем 1 или сотрудник не в HR департаменте");
     }
 
     @Test
     @DisplayName("Делаем большой первую буквы в имени, если она маленькая")
     public void updateNameIfLowRegisterTest() {
-        dbClient.createDB();
+        DB_CLIENT.createDB();
         List<Employee> lowRegisterEmployeesList = getLowRegisterEmployees();
         if (lowRegisterEmployeesList.size() > 1) {
-            employees.updateNameIfLowRegister();
+            EMPLOYEES.updateNameIfLowRegister();
             lowRegisterEmployeesList = getLowRegisterEmployees();
-            Assertions.assertTrue(lowRegisterEmployeesList.isEmpty());
+            Assertions.assertTrue(lowRegisterEmployeesList.isEmpty(), "Есть имена с маленькой буквой");
         }
-
     }
 
     @Test
@@ -50,24 +51,7 @@ public class EmployeeTest {
         String count = String.valueOf(getEmployeesFromIt().size());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
-        employees.employeesItCount();
+        EMPLOYEES.employeesItCount();
         Assertions.assertEquals(count, outputStream.toString().trim());
-    }
-
-    private List<Employee> getLowRegisterEmployees() {
-        return dbClient.select("SELECT * FROM Employee WHERE NAME ~ '^[a-zа-яё]' ", MAP_TO_EMPLOYEE);
-    }
-
-    private List<Employee> getAnnsEmployee() {
-        return dbClient.select("SELECT * FROM Employee WHERE NAME = 'Ann'", MAP_TO_EMPLOYEE);
-    }
-
-    private List<Employee> getEmployeesFromIt() {
-        dbClient.createDB();
-        return dbClient.select("SELECT * " +
-                "FROM Employee e " +
-                "JOIN Department d " +
-                "WHERE e.DepartmentID = d.ID " +
-                "AND d.Name = 'IT' ", MAP_TO_EMPLOYEE);
     }
 }

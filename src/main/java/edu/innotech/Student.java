@@ -31,7 +31,6 @@ public class Student {
         this.httpClient = httpClient;
     }
 
-
     public List<Integer> getGrades() {
         return new ArrayList<>(grades);
     }

@@ -66,4 +66,3 @@ public class StudentTest {
         verify(mockHttpClient, times(1)).execute(any(HttpGet.class));
     }
 }
-
